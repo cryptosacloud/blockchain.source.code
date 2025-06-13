@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Code2, Zap } from 'lucide-react';
+import { Menu, X, Zap, Cpu, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const navItems = [
@@ -16,17 +16,17 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-gray-900/95 backdrop-blur-lg border-b border-cyan-500/20 text-white sticky top-0 z-50 shadow-lg cyber-glow">
+    <nav className="bg-gray-900/95 backdrop-blur-lg border-b border-red-500/20 text-white sticky top-0 z-50 shadow-lg cyber-glow">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="relative">
-              <Code2 className="h-8 w-8 text-cyan-400 group-hover:text-cyan-300 transition-colors" />
-              <Zap className="h-4 w-4 text-purple-400 absolute -top-1 -right-1 animate-pulse" />
+              <Zap className="h-8 w-8 text-red-400 group-hover:text-red-300 transition-colors" />
+              <Sparkles className="h-4 w-4 text-orange-400 absolute -top-1 -right-1 animate-pulse" />
             </div>
-            <span className="font-bold text-xl bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent neon-text">
-              The Blockchain Coders
+            <span className="font-bold text-xl bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent neon-text">
+              Revolution Web3
             </span>
           </Link>
 
@@ -40,7 +40,7 @@ export function Navigation() {
                   className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 relative overflow-hidden group text-gray-300 hover:text-white hover:bg-gray-800/50"
                 >
                   <span className="relative z-10">{item.name}</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 to-orange-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </Link>
               ))}
             </div>
@@ -62,7 +62,7 @@ export function Navigation() {
 
       {/* Mobile Navigation */}
       {isOpen && (
-        <div className="lg:hidden border-t border-cyan-500/20">
+        <div className="lg:hidden border-t border-red-500/20">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-900/95 backdrop-blur-lg">
             {navItems.map((item) => (
               <Link

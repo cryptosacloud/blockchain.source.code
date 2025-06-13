@@ -58,13 +58,13 @@ export async function POST(request: NextRequest) {
     // Email to admin
     const adminEmailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: white; border-radius: 10px; overflow: hidden;">
-        <div style="background: linear-gradient(90deg, #00d4ff, #9d4edd); padding: 20px; text-align: center;">
-          <h1 style="margin: 0; font-size: 24px;">🚀 New Contact Enquiry</h1>
+        <div style="background: linear-gradient(90deg, #ef4444, #f97316); padding: 20px; text-align: center;">
+          <h1 style="margin: 0; font-size: 24px;">🔥 New Contact Enquiry</h1>
         </div>
         
         <div style="padding: 30px;">
           <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h2 style="color: #00d4ff; margin-top: 0;">Contact Details</h2>
+            <h2 style="color: #ef4444; margin-top: 0;">Contact Details</h2>
             <p><strong>Name:</strong> ${sanitizedData.fullName}</p>
             <p><strong>Email:</strong> ${sanitizedData.email}</p>
             <p><strong>Phone:</strong> ${sanitizedData.phone || 'Not provided'}</p>
@@ -72,16 +72,16 @@ export async function POST(request: NextRequest) {
           </div>
           
           <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h2 style="color: #9d4edd; margin-top: 0;">Subject</h2>
+            <h2 style="color: #f97316; margin-top: 0;">Subject</h2>
             <p>${sanitizedData.subject}</p>
           </div>
           
           <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 8px;">
-            <h2 style="color: #00d4ff; margin-top: 0;">Message</h2>
+            <h2 style="color: #ef4444; margin-top: 0;">Message</h2>
             <p style="line-height: 1.6;">${sanitizedData.message.replace(/\n/g, '<br>')}</p>
           </div>
           
-          <div style="margin-top: 20px; padding: 15px; background: rgba(0,212,255,0.1); border-left: 4px solid #00d4ff; border-radius: 4px;">
+          <div style="margin-top: 20px; padding: 15px; background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; border-radius: 4px;">
             <p style="margin: 0; font-size: 14px; color: #ccc;">
               <strong>Received:</strong> ${new Date(sanitizedData.timestamp).toLocaleString()}
             </p>
@@ -93,23 +93,23 @@ export async function POST(request: NextRequest) {
     // Email to customer (auto-reply)
     const customerEmailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: white; border-radius: 10px; overflow: hidden;">
-        <div style="background: linear-gradient(90deg, #00d4ff, #9d4edd); padding: 20px; text-align: center;">
+        <div style="background: linear-gradient(90deg, #ef4444, #f97316); padding: 20px; text-align: center;">
           <h1 style="margin: 0; font-size: 24px;">⚡ Message Received!</h1>
         </div>
         
         <div style="padding: 30px;">
           <p>Hi ${sanitizedData.fullName},</p>
           
-          <p>Thank you for reaching out to <strong>The Blockchain Coders</strong>! We've received your enquiry and our cyberpunk experts are already reviewing your message.</p>
+          <p>Thank you for reaching out to <strong>Revolution Web3 Design Store</strong>! We've received your enquiry and our revolutionary experts are already reviewing your message.</p>
           
-          <div style="background: rgba(0,212,255,0.1); padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #00d4ff;">
-            <h3 style="color: #00d4ff; margin-top: 0;">Your Enquiry Summary:</h3>
+          <div style="background: rgba(239,68,68,0.1); padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ef4444;">
+            <h3 style="color: #ef4444; margin-top: 0;">Your Enquiry Summary:</h3>
             <p><strong>Type:</strong> ${sanitizedData.enquiryType}</p>
             <p><strong>Subject:</strong> ${sanitizedData.subject}</p>
             <p><strong>Submitted:</strong> ${new Date(sanitizedData.timestamp).toLocaleString()}</p>
           </div>
           
-          <h3 style="color: #9d4edd;">What happens next?</h3>
+          <h3 style="color: #f97316;">What happens next?</h3>
           <ul style="line-height: 1.8;">
             <li>🔍 Our team will review your enquiry within 24 hours</li>
             <li>📧 You'll receive a detailed response via email</li>
@@ -117,18 +117,18 @@ export async function POST(request: NextRequest) {
             <li>🚀 We'll provide custom recommendations for your needs</li>
           </ul>
           
-          <div style="background: rgba(157,78,221,0.1); padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #9d4edd;">
-            <h4 style="color: #9d4edd; margin-top: 0;">Need immediate assistance?</h4>
+          <div style="background: rgba(249,115,22,0.1); padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #f97316;">
+            <h4 style="color: #f97316; margin-top: 0;">Need immediate assistance?</h4>
             <p style="margin-bottom: 0;">For urgent matters, reply to this email with "URGENT" in the subject line, and we'll prioritize your request.</p>
           </div>
           
           <p>Best regards,<br>
-          <strong>The Blockchain Coders Team</strong><br>
+          <strong>Revolution Web3 Design Store Team</strong><br>
           🌐 Building the future of Web3</p>
         </div>
         
         <div style="background: rgba(255,255,255,0.1); padding: 20px; text-align: center; font-size: 14px; color: #ccc;">
-          <p style="margin: 0;">© 2024 The Blockchain Coders. All rights reserved.</p>
+          <p style="margin: 0;">© 2024 Revolution Web3 Design Store. All rights reserved.</p>
         </div>
       </div>
     `;
@@ -136,8 +136,8 @@ export async function POST(request: NextRequest) {
     // Send email to admin
     await transporter.sendMail({
       from: process.env.SMTP_USER,
-      to: 'hello@blockchaincoders.dev',
-      subject: `🚀 New Contact Enquiry: ${sanitizedData.subject}`,
+      to: 'hello@revolutionweb3.store',
+      subject: `🔥 New Contact Enquiry: ${sanitizedData.subject}`,
       html: adminEmailHtml,
       replyTo: sanitizedData.email,
     });
@@ -146,7 +146,7 @@ export async function POST(request: NextRequest) {
     await transporter.sendMail({
       from: process.env.SMTP_USER,
       to: sanitizedData.email,
-      subject: '⚡ Your message has been received - The Blockchain Coders',
+      subject: '⚡ Your message has been received - Revolution Web3 Design Store',
       html: customerEmailHtml,
     });
 

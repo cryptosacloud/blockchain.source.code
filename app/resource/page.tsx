@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Video, Code, FileText, Download, ExternalLink, Cpu, Zap, Shield } from 'lucide-react';
+import { BookOpen, Video, Code, FileText, Download, ExternalLink, Cpu, Zap, Shield, Flame } from 'lucide-react';
 
 const resources = [
   {
@@ -70,27 +70,27 @@ export default function ResourcePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white py-20 relative overflow-hidden">
+      <section className="bg-gradient-to-br from-gray-900 via-red-900 to-orange-900 text-white py-20 relative overflow-hidden">
         <div className="absolute inset-0 grid-pattern opacity-20"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
-            <div className="inline-flex items-center space-x-2 bg-gray-800/50 backdrop-blur-lg border border-cyan-500/30 rounded-full px-6 py-3 mb-8">
-              <Cpu className="h-5 w-5 text-cyan-400 animate-pulse" />
-              <span className="text-cyan-400 font-medium">Resource Database</span>
+            <div className="inline-flex items-center space-x-2 bg-gray-800/50 backdrop-blur-lg border border-red-500/30 rounded-full px-6 py-3 mb-8">
+              <Flame className="h-5 w-5 text-red-400 animate-pulse" />
+              <span className="text-red-400 font-medium">Resource Database</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
-              <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent neon-text">
-                Blockchain Development
+              <span className="bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent neon-text">
+                Revolutionary Web3
               </span>
               <br />
-              <span className="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent neon-text">
+              <span className="bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent neon-text">
                 Resources
               </span>
             </h1>
             <p className="text-xl text-gray-300 mb-8 max-w-4xl mx-auto leading-relaxed">
               Access our comprehensive collection of tutorials, documentation, templates, and guides 
-              to accelerate your blockchain development journey into the 
-              <span className="text-purple-400 font-semibold"> digital frontier</span>.
+              to accelerate your Web3 development journey into the 
+              <span className="text-orange-400 font-semibold"> revolutionary frontier</span>.
             </p>
           </div>
         </div>
@@ -104,7 +104,7 @@ export default function ResourcePage() {
             {resources.map((resource) => {
               const Icon = resource.icon;
               return (
-                <Card key={resource.id} className="group bg-gray-800/50 backdrop-blur-lg border-gray-700/50 hover:border-cyan-400/50 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 rounded-2xl overflow-hidden holographic">
+                <Card key={resource.id} className="group bg-gray-800/50 backdrop-blur-lg border-gray-700/50 hover:border-red-400/50 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 rounded-2xl overflow-hidden holographic">
                   <div className="relative overflow-hidden">
                     <img
                       src={resource.image}
@@ -113,22 +113,22 @@ export default function ResourcePage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent"></div>
                     <div className="absolute top-4 left-4">
-                      <Badge className="bg-gradient-to-r from-cyan-600 to-purple-600 text-white border-0">
+                      <Badge className="bg-gradient-to-r from-red-600 to-orange-600 text-white border-0">
                         {resource.category}
                       </Badge>
                     </div>
                     <div className="absolute top-4 right-4">
-                      <div className="bg-gray-800/90 backdrop-blur-lg p-2 rounded-full border border-cyan-500/30">
-                        <Icon className="h-5 w-5 text-cyan-400" />
+                      <div className="bg-gray-800/90 backdrop-blur-lg p-2 rounded-full border border-red-500/30">
+                        <Icon className="h-5 w-5 text-red-400" />
                       </div>
                     </div>
                     <div className="absolute bottom-4 left-4">
-                      <Zap className="h-6 w-6 text-purple-400 animate-pulse" />
+                      <Flame className="h-6 w-6 text-orange-400 animate-pulse" />
                     </div>
                   </div>
                   <CardHeader>
                     <div className="flex justify-between items-start">
-                      <CardTitle className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
+                      <CardTitle className="text-xl font-bold text-white group-hover:text-red-400 transition-colors">
                         {resource.title}
                       </CardTitle>
                       <Badge variant="outline" className="text-xs border-gray-600 text-gray-300">
@@ -141,12 +141,12 @@ export default function ResourcePage() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex gap-2">
-                      <Button className="flex-1 bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white rounded-xl">
+                      <Button className="flex-1 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white rounded-xl">
                         <ExternalLink className="mr-2 h-4 w-4" />
                         View Resource
                       </Button>
                       {resource.downloadable && (
-                        <Button variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:border-cyan-400 hover:text-cyan-400 rounded-xl">
+                        <Button variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:border-red-400 hover:text-red-400 rounded-xl">
                           <Download className="h-4 w-4" />
                         </Button>
                       )}
@@ -164,41 +164,41 @@ export default function ResourcePage() {
         <div className="absolute inset-0 grid-pattern opacity-10"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center space-x-2 bg-gray-800/50 backdrop-blur-lg border border-purple-500/30 rounded-full px-6 py-3 mb-8">
-              <Shield className="h-5 w-5 text-purple-400 animate-pulse" />
-              <span className="text-purple-400 font-medium">Learning Arsenal</span>
+            <div className="inline-flex items-center space-x-2 bg-gray-800/50 backdrop-blur-lg border border-orange-500/30 rounded-full px-6 py-3 mb-8">
+              <Shield className="h-5 w-5 text-orange-400 animate-pulse" />
+              <span className="text-orange-400 font-medium">Learning Arsenal</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent neon-text">
+              <span className="bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent neon-text">
                 Additional Learning Resources
               </span>
             </h2>
             <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
               Expand your knowledge with our curated collection of external resources and 
-              <span className="text-cyan-400 font-semibold"> cyberpunk tools</span>.
+              <span className="text-red-400 font-semibold"> revolutionary tools</span>.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="text-center p-8 bg-gray-800/50 backdrop-blur-lg border-cyan-500/30 rounded-2xl holographic group hover:border-cyan-400/50 transition-all duration-300">
-              <BookOpen className="h-16 w-16 text-cyan-400 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300" />
-              <h3 className="text-lg font-semibold mb-4 text-cyan-400">Documentation</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">Comprehensive guides and API references from the future</p>
+            <Card className="text-center p-8 bg-gray-800/50 backdrop-blur-lg border-red-500/30 rounded-2xl holographic group hover:border-red-400/50 transition-all duration-300">
+              <BookOpen className="h-16 w-16 text-red-400 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="text-lg font-semibold mb-4 text-red-400">Documentation</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">Comprehensive guides and API references from the revolution</p>
             </Card>
-            <Card className="text-center p-8 bg-gray-800/50 backdrop-blur-lg border-purple-500/30 rounded-2xl holographic group hover:border-purple-400/50 transition-all duration-300">
-              <Video className="h-16 w-16 text-purple-400 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300" />
-              <h3 className="text-lg font-semibold mb-4 text-purple-400">Video Tutorials</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">Step-by-step video courses and holographic workshops</p>
+            <Card className="text-center p-8 bg-gray-800/50 backdrop-blur-lg border-orange-500/30 rounded-2xl holographic group hover:border-orange-400/50 transition-all duration-300">
+              <Video className="h-16 w-16 text-orange-400 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="text-lg font-semibold mb-4 text-orange-400">Video Tutorials</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">Step-by-step video courses and revolutionary workshops</p>
             </Card>
             <Card className="text-center p-8 bg-gray-800/50 backdrop-blur-lg border-green-500/30 rounded-2xl holographic group hover:border-green-400/50 transition-all duration-300">
               <Code className="h-16 w-16 text-green-400 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300" />
               <h3 className="text-lg font-semibold mb-4 text-green-400">Code Examples</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">Ready-to-use code snippets and quantum templates</p>
+              <p className="text-gray-300 text-sm leading-relaxed">Ready-to-use code snippets and revolutionary templates</p>
             </Card>
-            <Card className="text-center p-8 bg-gray-800/50 backdrop-blur-lg border-orange-500/30 rounded-2xl holographic group hover:border-orange-400/50 transition-all duration-300">
-              <FileText className="h-16 w-16 text-orange-400 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300" />
-              <h3 className="text-lg font-semibold mb-4 text-orange-400">Best Practices</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">Industry standards and cybersecurity guidelines</p>
+            <Card className="text-center p-8 bg-gray-800/50 backdrop-blur-lg border-yellow-500/30 rounded-2xl holographic group hover:border-yellow-400/50 transition-all duration-300">
+              <FileText className="h-16 w-16 text-yellow-400 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300" />
+              <h3 className="text-lg font-semibold mb-4 text-yellow-400">Best Practices</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">Industry standards and revolutionary security guidelines</p>
             </Card>
           </div>
         </div>

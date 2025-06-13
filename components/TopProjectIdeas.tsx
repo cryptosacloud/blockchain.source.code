@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Cpu, Zap } from 'lucide-react';
+import { ArrowRight, Cpu, Zap, Flame } from 'lucide-react';
 
 const projectIdeas = [
   {
@@ -183,30 +183,30 @@ export function TopProjectIdeas() {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 bg-gray-800/50 backdrop-blur-lg border border-purple-500/30 rounded-full px-6 py-3 mb-8">
-            <Zap className="h-5 w-5 text-purple-400 animate-pulse" />
-            <span className="text-purple-400 font-medium">Innovation Hub</span>
+          <div className="inline-flex items-center space-x-2 bg-gray-800/50 backdrop-blur-lg border border-orange-500/30 rounded-full px-6 py-3 mb-8">
+            <Flame className="h-5 w-5 text-orange-400 animate-pulse" />
+            <span className="text-orange-400 font-medium">Revolutionary Ideas</span>
           </div>
           
           <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent neon-text">
-              Top 20 Blockchain
+            <span className="bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent neon-text">
+              Top 20 Revolutionary
             </span>
             <br />
-            <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent neon-text">
+            <span className="bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent neon-text">
               Project Ideas
             </span>
           </h2>
           <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-            Explore innovative blockchain project ideas with complete source code, tutorials, and implementation guides.
+            Explore revolutionary Web3 project ideas with complete source code, tutorials, and implementation guides.
             Perfect for learning and building your 
-            <span className="text-purple-400 font-semibold"> cyberpunk Web3 portfolio</span>.
+            <span className="text-orange-400 font-semibold"> revolutionary Web3 portfolio</span>.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {projectIdeas.map((idea) => (
-            <Card key={idea.id} className="group bg-gray-800/50 backdrop-blur-lg border-gray-700/50 hover:border-purple-400/50 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 rounded-2xl overflow-hidden holographic">
+            <Card key={idea.id} className="group bg-gray-800/50 backdrop-blur-lg border-gray-700/50 hover:border-orange-400/50 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 rounded-2xl overflow-hidden holographic">
               <div className="relative overflow-hidden">
                 <img
                   src={idea.image}
@@ -218,12 +218,12 @@ export function TopProjectIdeas() {
                   {idea.difficulty}
                 </Badge>
                 <div className="absolute bottom-2 left-2">
-                  <Cpu className="h-4 w-4 text-purple-400 animate-pulse" />
+                  <Flame className="h-4 w-4 text-orange-400 animate-pulse" />
                 </div>
               </div>
               
               <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-semibold line-clamp-2 text-white group-hover:text-purple-400 transition-colors">
+                <CardTitle className="text-lg font-semibold line-clamp-2 text-white group-hover:text-orange-400 transition-colors">
                   {idea.title}
                 </CardTitle>
                 <Badge variant="outline" className="w-fit text-xs border-gray-600 text-gray-300">
@@ -235,7 +235,7 @@ export function TopProjectIdeas() {
                 <CardDescription className="text-sm line-clamp-3 mb-4 text-gray-300">
                   {idea.description}
                 </CardDescription>
-                <Button variant="outline" size="sm" className="w-full border-gray-600 text-gray-300 hover:bg-gradient-to-r hover:from-purple-600 hover:to-cyan-600 hover:text-white hover:border-transparent transition-all duration-300 rounded-xl">
+                <Button variant="outline" size="sm" className="w-full border-gray-600 text-gray-300 hover:bg-gradient-to-r hover:from-orange-600 hover:to-red-600 hover:text-white hover:border-transparent transition-all duration-300 rounded-xl">
                   <Cpu className="mr-2 h-4 w-4" />
                   Source Code
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -246,9 +246,9 @@ export function TopProjectIdeas() {
         </div>
 
         <div className="text-center mt-16">
-          <Button size="lg" className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white px-10 py-4 text-lg font-semibold rounded-xl cyber-glow transition-all duration-300 transform hover:scale-105">
-            <Zap className="mr-2 h-5 w-5" />
-            View All Project Ideas
+          <Button size="lg" className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white px-10 py-4 text-lg font-semibold rounded-xl cyber-glow transition-all duration-300 transform hover:scale-105">
+            <Flame className="mr-2 h-5 w-5" />
+            View All Revolutionary Ideas
           </Button>
         </div>
       </div>
