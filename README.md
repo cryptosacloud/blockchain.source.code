@@ -1,4 +1,4 @@
-# Blockchain Coders - Contact & Payment System
+# Revolution Web3 Design Store Blockchain Coders - Contact & Payment System
 
 A comprehensive contact and booking system with integrated payment processing for blockchain development services.
 
@@ -223,7 +223,7 @@ NEXT_PUBLIC_BASE_URL="https://yourdomain.com"
 ## Support
 
 For technical support or questions:
-- Email: hello@blockchaincoders.dev
+- Email: hello@Revolution Web3 Design Store
 - Documentation: Check the `/docs` folder
 - Issues: Create an issue in the repository
 
