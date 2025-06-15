@@ -45,7 +45,7 @@ export class StripeProcessor {
       console.error('Stripe payment creation error:', error);
       return {
         success: false,
-        error: error.message,
+        error: error instanceof Error ? error.message : 'An unknown error occurred',
       };
     }
   }
@@ -62,7 +62,7 @@ export class StripeProcessor {
       console.error('Stripe payment confirmation error:', error);
       return {
         success: false,
-        error: error.message,
+        error: error instanceof Error ? error.message : 'An unknown error occurred',
       };
     }
   }
@@ -139,7 +139,7 @@ export class CryptomusProcessor {
       console.error('Cryptomus invoice creation error:', error);
       return {
         success: false,
-        error: error.message,
+        error: error instanceof Error ? error.message : 'An unknown error occurred',
       };
     }
   }
@@ -178,7 +178,7 @@ export class CryptomusProcessor {
       console.error('Cryptomus status check error:', error);
       return {
         success: false,
-        error: error.message,
+        error: error instanceof Error ? error.message : 'An unknown error occurred',
       };
     }
   }
