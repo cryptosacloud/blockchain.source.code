@@ -7,7 +7,17 @@ import { Badge } from '@/components/ui/badge';
 import { Search, Filter, Cpu, Zap, ShoppingCart, Flame } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
-const projects = [
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  category: string;
+  price: string;
+  features: string[];
+}
+
+const projects: Project[] = [
   {
     id: 1,
     title: 'NFT Marketplace',
@@ -356,7 +366,7 @@ export function SourceCodeGallery() {
     return matchesSearch && matchesCategory;
   });
 
-  const handleBuyNow = (project) => {
+  const handleBuyNow = (project: Project) => {
     // Redirect to contact page with pre-selected service
     const serviceType = project.title.toLowerCase().replace(/\s+/g, '-');
     window.location.href = `/contact?service=${serviceType}&price=${project.price.replace('$', '')}`;
