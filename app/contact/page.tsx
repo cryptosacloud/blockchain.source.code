@@ -19,8 +19,26 @@ const enquiryTypes = [
   { value: 'other', label: 'Other' },
 ];
 
+interface FormData {
+  fullName: string;
+  email: string;
+  phone: string;
+  enquiryType: string;
+  subject: string;
+  message: string;
+}
+
+interface FormErrors {
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  enquiryType?: string;
+  subject?: string;
+  message?: string;
+}
+
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     fullName: '',
     email: '',
     phone: '',
@@ -29,12 +47,12 @@ export default function ContactPage() {
     message: ''
   });
   
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: FormErrors = {};
     
     if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
     if (!formData.email.trim()) newErrors.email = 'Email is required';
@@ -48,14 +66,14 @@ export default function ContactPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!validateForm()) return;
