@@ -19,7 +19,7 @@ export default function PaymentSuccessPage() {
     const currency = searchParams.get('currency');
 
     setPaymentDetails({
-      sessionId,
+      sessionId: sessionId || undefined,
       amount: amount || undefined,
       currency: currency || undefined,
     });
