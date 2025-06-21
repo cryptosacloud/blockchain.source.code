@@ -202,6 +202,23 @@ fi
 
 cd "$PROJECT_DIR"
 
+# Clean existing installation to prevent dependency conflicts
+print_status "Cleaning existing installation..."
+if [ -d "node_modules" ]; then
+    print_status "Removing existing node_modules directory..."
+    rm -rf node_modules
+fi
+
+if [ -f "package-lock.json" ]; then
+    print_status "Removing existing package-lock.json..."
+    rm -f package-lock.json
+fi
+
+print_status "Clearing npm cache..."
+npm cache clean --force
+
+print_success "Installation cleaned"
+
 # Check if this is already a Next.js project
 if [ -f "package.json" ]; then
     print_status "Existing Next.js project detected, updating dependencies..."
