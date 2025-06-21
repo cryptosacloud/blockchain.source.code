@@ -27,7 +27,7 @@ export default function SourceCodePage() {
           </div>
         </div>
       </div>
-      <SourceCodeGallery />
+      <SourceCodeGallery showFeaturedOnly={false} />
       <TopProjectIdeas />
       <Newsletter />
     </>

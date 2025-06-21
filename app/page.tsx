@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <SourceCodeGallery />
+      <SourceCodeGallery showFeaturedOnly={true} />
       <TopProjectIdeas />
       <Newsletter />
     </>

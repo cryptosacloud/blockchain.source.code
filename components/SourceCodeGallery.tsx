@@ -353,13 +353,25 @@ const projects: Project[] = [
   }
 ];
 
+// Featured products for home page (9 specific products)
+const featuredProductIds = [31, 33, 20, 21, 17, 10, 11, 12, 8]; // IDs for the 9 featured products
+
 const categories = ['All', 'NFT', 'DeFi', 'Governance', 'Enterprise', 'Storage', 'Insurance', 'Identity', 'Real Estate', 'Crowdfunding', 'Blockchain', 'Tools', 'Solana', 'ICO', 'Social', 'AI', 'Trading', 'Exchange', 'Services'];
 
-export function SourceCodeGallery() {
+interface SourceCodeGalleryProps {
+  showFeaturedOnly?: boolean;
+}
+
+export function SourceCodeGallery({ showFeaturedOnly = false }: SourceCodeGalleryProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const filteredProjects = projects.filter(project => {
+  // Use featured products for home page, all products for source code page
+  const displayProjects = showFeaturedOnly 
+    ? projects.filter(project => featuredProductIds.includes(project.id))
+    : projects;
+
+  const filteredProjects = displayProjects.filter(project => {
     const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          project.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || project.category === selectedCategory;
@@ -395,35 +407,37 @@ export function SourceCodeGallery() {
           </p>
         </div>
 
-        {/* Search and Filter */}
-        <div className="flex flex-col md:flex-row gap-6 mb-12">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-red-400 h-5 w-5" />
-            <Input
-              placeholder="Search the revolution..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-12 bg-gray-800/50 backdrop-blur-lg border-red-500/30 text-white placeholder:text-gray-400 rounded-xl h-12 cyber-glow"
-            />
+        {/* Search and Filter - only show on source code page */}
+        {!showFeaturedOnly && (
+          <div className="flex flex-col md:flex-row gap-6 mb-12">
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-red-400 h-5 w-5" />
+              <Input
+                placeholder="Search the revolution..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-12 bg-gray-800/50 backdrop-blur-lg border-red-500/30 text-white placeholder:text-gray-400 rounded-xl h-12 cyber-glow"
+              />
+            </div>
+            <div className="flex gap-3 flex-wrap">
+              {categories.map((category) => (
+                <Button
+                  key={category}
+                  variant={selectedCategory === category ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(category)}
+                  className={`whitespace-nowrap rounded-xl transition-all duration-300 ${
+                    selectedCategory === category
+                      ? 'bg-gradient-to-r from-red-600 to-orange-600 text-white cyber-glow'
+                      : 'border-gray-600 text-gray-300 hover:border-red-400 hover:text-red-400'
+                  }`}
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
           </div>
-          <div className="flex gap-3 flex-wrap">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedCategory(category)}
-                className={`whitespace-nowrap rounded-xl transition-all duration-300 ${
-                  selectedCategory === category
-                    ? 'bg-gradient-to-r from-red-600 to-orange-600 text-white cyber-glow'
-                    : 'border-gray-600 text-gray-300 hover:border-red-400 hover:text-red-400'
-                }`}
-              >
-                {category}
-              </Button>
-            ))}
-          </div>
-        </div>
+        )}
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
