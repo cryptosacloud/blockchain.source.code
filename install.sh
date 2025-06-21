@@ -204,7 +204,30 @@ cd "$PROJECT_DIR"
 
 # Check if this is already a Next.js project
 if [ -f "package.json" ]; then
-    print_status "Existing Next.js project detected, installing dependencies..."
+    print_status "Existing Next.js project detected, cleaning and reinstalling dependencies..."
+    
+    # Clean npm cache and remove existing installations
+    print_status "Clearing npm cache..."
+    npm cache clean --force
+    
+    # Remove node_modules and package-lock.json for clean installation
+    if [ -d "node_modules" ]; then
+        print_status "Removing existing node_modules directory..."
+        rm -rf node_modules
+    fi
+    
+    if [ -f "package-lock.json" ]; then
+        print_status "Removing existing package-lock.json..."
+        rm -f package-lock.json
+    fi
+    
+    if [ -f "yarn.lock" ]; then
+        print_status "Removing existing yarn.lock..."
+        rm -f yarn.lock
+    fi
+    
+    # Fresh installation of dependencies
+    print_status "Installing dependencies from package.json..."
     npm install
     print_success "Dependencies installed from package.json"
 else
