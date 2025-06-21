@@ -1,164 +1,115 @@
 import { NextRequest, NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { DatabaseManager, ContactSubmission } from '@/lib/database';
+import { EmailService } from '@/lib/email';
+import { FormValidator } from '@/lib/validation';
+
+// Rate limiting storage (in production, use Redis or similar)
+const rateLimitMap = new Map<string, number[]>();
 
 export async function POST(request: NextRequest) {
   try {
+    // Get client IP for rate limiting
+    const clientIP = request.headers.get('x-forwarded-for') || 
+                    request.headers.get('x-real-ip') || 
+                    'unknown';
+
+    // Check rate limiting
+    if (!FormValidator.checkRateLimit(clientIP, rateLimitMap)) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please wait before submitting again.' },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
-    
-    // Validate required fields
-    const requiredFields = ['fullName', 'email', 'enquiryType', 'subject', 'message'];
-    for (const field of requiredFields) {
-      if (!body[field]) {
-        return NextResponse.json(
-          { error: `${field} is required` },
-          { status: 400 }
-        );
-      }
-    }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(body.email)) {
+    // Validate form data
+    const validation = FormValidator.validateContactForm(body);
+    if (!validation.isValid) {
       return NextResponse.json(
-        { error: 'Invalid email format' },
+        { error: 'Validation failed', details: validation.errors },
         { status: 400 }
       );
     }
 
-    // Validate message length
-    if (body.message.length > 2000) {
-      return NextResponse.json(
-        { error: 'Message too long' },
-        { status: 400 }
-      );
-    }
-
-    // Sanitize inputs
-    const sanitizedData = {
-      fullName: body.fullName.trim(),
-      email: body.email.trim().toLowerCase(),
-      phone: body.phone ? body.phone.trim() : '',
-      enquiryType: body.enquiryType,
-      subject: body.subject.trim(),
-      message: body.message.trim(),
-      timestamp: new Date().toISOString()
+    // Sanitize input data
+    const sanitizedData: ContactSubmission = {
+      fullName: FormValidator.sanitizeInput(body.fullName),
+      email: FormValidator.sanitizeInput(body.email.toLowerCase()),
+      phone: body.phone ? FormValidator.sanitizeInput(body.phone) : undefined,
+      enquiryType: FormValidator.sanitizeInput(body.enquiryType),
+      subject: FormValidator.sanitizeInput(body.subject),
+      message: FormValidator.sanitizeInput(body.message),
+      ipAddress: clientIP,
+      userAgent: request.headers.get('user-agent') || undefined,
     };
 
-    // Create transporter
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD,
-      },
-    });
+    // Save to database
+    let submissionId: number;
+    try {
+      submissionId = await DatabaseManager.createContactSubmission(sanitizedData);
+    } catch (dbError) {
+      console.error('Database error:', dbError);
+      return NextResponse.json(
+        { error: 'Failed to save your message. Please try again.' },
+        { status: 500 }
+      );
+    }
 
-    // Email to admin
-    const adminEmailHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: white; border-radius: 10px; overflow: hidden;">
-        <div style="background: linear-gradient(90deg, #ef4444, #f97316); padding: 20px; text-align: center;">
-          <h1 style="margin: 0; font-size: 24px;">🔥 New Contact Enquiry</h1>
-        </div>
-        
-        <div style="padding: 30px;">
-          <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h2 style="color: #ef4444; margin-top: 0;">Contact Details</h2>
-            <p><strong>Name:</strong> ${sanitizedData.fullName}</p>
-            <p><strong>Email:</strong> ${sanitizedData.email}</p>
-            <p><strong>Phone:</strong> ${sanitizedData.phone || 'Not provided'}</p>
-            <p><strong>Enquiry Type:</strong> ${sanitizedData.enquiryType}</p>
-          </div>
-          
-          <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h2 style="color: #f97316; margin-top: 0;">Subject</h2>
-            <p>${sanitizedData.subject}</p>
-          </div>
-          
-          <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 8px;">
-            <h2 style="color: #ef4444; margin-top: 0;">Message</h2>
-            <p style="line-height: 1.6;">${sanitizedData.message.replace(/\n/g, '<br>')}</p>
-          </div>
-          
-          <div style="margin-top: 20px; padding: 15px; background: rgba(239,68,68,0.1); border-left: 4px solid #ef4444; border-radius: 4px;">
-            <p style="margin: 0; font-size: 14px; color: #ccc;">
-              <strong>Received:</strong> ${new Date(sanitizedData.timestamp).toLocaleString()}
-            </p>
-          </div>
-        </div>
-      </div>
-    `;
+    // Send emails (don't fail the request if emails fail)
+    const emailPromises = [
+      EmailService.sendUserConfirmation(sanitizedData),
+      EmailService.sendAdminNotification(sanitizedData),
+    ];
 
-    // Email to customer (auto-reply)
-    const customerEmailHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: white; border-radius: 10px; overflow: hidden;">
-        <div style="background: linear-gradient(90deg, #ef4444, #f97316); padding: 20px; text-align: center;">
-          <h1 style="margin: 0; font-size: 24px;">⚡ Message Received!</h1>
-        </div>
-        
-        <div style="padding: 30px;">
-          <p>Hi ${sanitizedData.fullName},</p>
-          
-          <p>Thank you for reaching out to <strong>Revolution Web3 Design Store</strong>! We've received your enquiry and our revolutionary experts are already reviewing your message.</p>
-          
-          <div style="background: rgba(239,68,68,0.1); padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ef4444;">
-            <h3 style="color: #ef4444; margin-top: 0;">Your Enquiry Summary:</h3>
-            <p><strong>Type:</strong> ${sanitizedData.enquiryType}</p>
-            <p><strong>Subject:</strong> ${sanitizedData.subject}</p>
-            <p><strong>Submitted:</strong> ${new Date(sanitizedData.timestamp).toLocaleString()}</p>
-          </div>
-          
-          <h3 style="color: #f97316;">What happens next?</h3>
-          <ul style="line-height: 1.8;">
-            <li>🔍 Our team will review your enquiry within 24 hours</li>
-            <li>📧 You'll receive a detailed response via email</li>
-            <li>💬 For complex projects, we may schedule a consultation call</li>
-            <li>🚀 We'll provide custom recommendations for your needs</li>
-          </ul>
-          
-          <div style="background: rgba(249,115,22,0.1); padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #f97316;">
-            <h4 style="color: #f97316; margin-top: 0;">Need immediate assistance?</h4>
-            <p style="margin-bottom: 0;">For urgent matters, reply to this email with "URGENT" in the subject line, and we'll prioritize your request.</p>
-          </div>
-          
-          <p>Best regards,<br>
-          <strong>Revolution Web3 Design Store Team</strong><br>
-          🌐 Building the future of Web3</p>
-        </div>
-        
-        <div style="background: rgba(255,255,255,0.1); padding: 20px; text-align: center; font-size: 14px; color: #ccc;">
-          <p style="margin: 0;">© 2024 Revolution Web3 Design Store. All rights reserved.</p>
-        </div>
-      </div>
-    `;
-
-    // Send email to admin
-    await transporter.sendMail({
-      from: process.env.SMTP_USER,
-      to: 'hello@revolutionweb3.store',
-      subject: `🔥 New Contact Enquiry: ${sanitizedData.subject}`,
-      html: adminEmailHtml,
-      replyTo: sanitizedData.email,
-    });
-
-    // Send auto-reply to customer
-    await transporter.sendMail({
-      from: process.env.SMTP_USER,
-      to: sanitizedData.email,
-      subject: '⚡ Your message has been received - Revolution Web3 Design Store',
-      html: customerEmailHtml,
-    });
+    try {
+      const [userEmailSent, adminEmailSent] = await Promise.all(emailPromises);
+      
+      if (!userEmailSent) {
+        console.error('Failed to send user confirmation email');
+      }
+      
+      if (!adminEmailSent) {
+        console.error('Failed to send admin notification email');
+      }
+    } catch (emailError) {
+      console.error('Email sending error:', emailError);
+      // Don't fail the request if emails fail
+    }
 
     return NextResponse.json({
       success: true,
-      message: 'Message sent successfully'
+      message: 'Your message has been sent successfully!',
+      submissionId,
     });
 
   } catch (error) {
     console.error('Contact form error:', error);
     return NextResponse.json(
-      { error: 'Failed to send message. Please try again.' },
+      { error: 'An unexpected error occurred. Please try again.' },
+      { status: 500 }
+    );
+  }
+}
+
+// Health check endpoint
+export async function GET() {
+  try {
+    // Test database connection
+    const dbConnected = await DatabaseManager.testConnection();
+    
+    // Test email configuration
+    const emailConfigured = await EmailService.testEmailConfig();
+
+    return NextResponse.json({
+      status: 'ok',
+      database: dbConnected ? 'connected' : 'disconnected',
+      email: emailConfigured ? 'configured' : 'not configured',
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { status: 'error', message: 'Health check failed' },
       { status: 500 }
     );
   }

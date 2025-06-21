@@ -26,6 +26,7 @@ interface FormData {
   enquiryType: string;
   subject: string;
   message: string;
+  honeypot: string; // Hidden field for spam prevention
 }
 
 interface FormErrors {
@@ -35,6 +36,7 @@ interface FormErrors {
   enquiryType?: string;
   subject?: string;
   message?: string;
+  general?: string;
 }
 
 export default function ContactPage() {
@@ -44,7 +46,8 @@ export default function ContactPage() {
     phone: '',
     enquiryType: '',
     subject: '',
-    message: ''
+    message: '',
+    honeypot: '', // Hidden honeypot field
   });
   
   const [errors, setErrors] = useState<FormErrors>({});
@@ -54,13 +57,36 @@ export default function ContactPage() {
   const validateForm = () => {
     const newErrors: FormErrors = {};
     
-    if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
-    if (!formData.email.trim()) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
-    if (!formData.enquiryType) newErrors.enquiryType = 'Enquiry type is required';
-    if (!formData.subject.trim()) newErrors.subject = 'Subject is required';
-    if (!formData.message.trim()) newErrors.message = 'Message is required';
-    if (formData.message.length > 2000) newErrors.message = 'Message must be less than 2000 characters';
+    // Client-side validation
+    if (!formData.fullName.trim() || formData.fullName.trim().length < 2) {
+      newErrors.fullName = 'Full name must be at least 2 characters long';
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+    }
+    
+    if (formData.phone && !/^[\+]?[1-9][\d\s\-\(\)]{7,15}$/.test(formData.phone.trim())) {
+      newErrors.phone = 'Please enter a valid phone number';
+    }
+    
+    if (!formData.enquiryType) {
+      newErrors.enquiryType = 'Enquiry type is required';
+    }
+    
+    if (!formData.subject.trim() || formData.subject.trim().length < 5) {
+      newErrors.subject = 'Subject must be at least 5 characters long';
+    }
+    
+    if (!formData.message.trim() || formData.message.trim().length < 10) {
+      newErrors.message = 'Message must be at least 10 characters long';
+    }
+    
+    if (formData.message.length > 2000) {
+      newErrors.message = 'Message must be less than 2000 characters';
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -68,7 +94,9 @@ export default function ContactPage() {
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
+    
+    // Clear error when user starts typing
+    if (errors[field as keyof FormErrors]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
   };
@@ -79,6 +107,7 @@ export default function ContactPage() {
     if (!validateForm()) return;
     
     setIsLoading(true);
+    setErrors({});
     
     try {
       const response = await fetch('/api/contact', {
@@ -93,20 +122,27 @@ export default function ContactPage() {
       
       if (response.ok) {
         setIsSubmitted(true);
+        // Reset form
         setFormData({
           fullName: '',
           email: '',
           phone: '',
           enquiryType: '',
           subject: '',
-          message: ''
+          message: '',
+          honeypot: '',
         });
       } else {
-        throw new Error(result.error || 'Failed to send message');
+        // Handle validation errors from server
+        if (result.details) {
+          setErrors(result.details);
+        } else {
+          setErrors({ general: result.error || 'Failed to send message' });
+        }
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('There was an error sending your message. Please try again.');
+      setErrors({ general: 'Network error. Please check your connection and try again.' });
     } finally {
       setIsLoading(false);
     }
@@ -120,7 +156,7 @@ export default function ContactPage() {
             <div className="bg-green-500/20 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
               <CheckCircle className="h-8 w-8 text-green-400" />
             </div>
-            <CardTitle className="text-2xl text-green-400">Message Sent!</CardTitle>
+            <CardTitle className="text-2xl text-green-400">Message Sent Successfully!</CardTitle>
             <CardDescription className="text-gray-300">
               Thank you for your enquiry. We'll get back to you within 24 hours.
             </CardDescription>
@@ -176,7 +212,24 @@ export default function ContactPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
+                {errors.general && (
+                  <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 mb-6">
+                    <p className="text-red-400 text-sm">{errors.general}</p>
+                  </div>
+                )}
+                
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Honeypot field - hidden from users */}
+                  <input
+                    type="text"
+                    name="honeypot"
+                    value={formData.honeypot}
+                    onChange={(e) => handleInputChange('honeypot', e.target.value)}
+                    style={{ display: 'none' }}
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+
                   {/* Personal Information */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -190,6 +243,7 @@ export default function ContactPage() {
                         onChange={(e) => handleInputChange('fullName', e.target.value)}
                         className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 rounded-xl cyber-glow"
                         placeholder="Enter your full name"
+                        required
                       />
                       {errors.fullName && <p className="text-red-400 text-sm mt-1">{errors.fullName}</p>}
                     </div>
@@ -206,6 +260,7 @@ export default function ContactPage() {
                         onChange={(e) => handleInputChange('email', e.target.value)}
                         className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 rounded-xl cyber-glow"
                         placeholder="Enter your email"
+                        required
                       />
                       {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
                     </div>
@@ -223,6 +278,7 @@ export default function ContactPage() {
                       className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 rounded-xl cyber-glow"
                       placeholder="Enter your phone number"
                     />
+                    {errors.phone && <p className="text-red-400 text-sm mt-1">{errors.phone}</p>}
                   </div>
 
                   {/* Enquiry Type */}
@@ -258,6 +314,7 @@ export default function ContactPage() {
                       onChange={(e) => handleInputChange('subject', e.target.value)}
                       className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 rounded-xl cyber-glow"
                       placeholder="Brief description of your enquiry"
+                      required
                     />
                     {errors.subject && <p className="text-red-400 text-sm mt-1">{errors.subject}</p>}
                   </div>
@@ -275,6 +332,7 @@ export default function ContactPage() {
                       maxLength={2000}
                       className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-400 rounded-xl cyber-glow min-h-[120px]"
                       placeholder="Tell us about your project, requirements, or questions..."
+                      required
                     />
                     <div className="flex justify-between items-center mt-1">
                       {errors.message && <p className="text-red-400 text-sm">{errors.message}</p>}
@@ -285,7 +343,7 @@ export default function ContactPage() {
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white py-4 text-lg font-semibold rounded-xl cyber-glow transition-all duration-300 transform hover:scale-105"
+                    className="w-full bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white py-4 text-lg font-semibold rounded-xl cyber-glow transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     {isLoading ? (
                       <>
