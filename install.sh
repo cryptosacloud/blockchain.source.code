@@ -202,84 +202,16 @@ fi
 
 cd "$PROJECT_DIR"
 
-# Clean existing installation to prevent dependency conflicts
-print_status "Cleaning existing installation..."
-if [ -d "node_modules" ]; then
-    print_status "Removing existing node_modules directory..."
-    rm -rf node_modules
-fi
-
-if [ -f "package-lock.json" ]; then
-    print_status "Removing existing package-lock.json..."
-    rm -f package-lock.json
-fi
-
-print_status "Clearing npm cache..."
-npm cache clean --force
-
-print_success "Installation cleaned"
-
 # Check if this is already a Next.js project
 if [ -f "package.json" ]; then
-    print_status "Existing Next.js project detected, updating dependencies..."
+    print_status "Existing Next.js project detected, installing dependencies..."
+    npm install
+    print_success "Dependencies installed from package.json"
 else
     print_status "Initializing new Next.js project..."
     npx create-next-app@13.5.1 . --typescript --tailwind --eslint --app --src-dir=false --import-alias="@/*" --yes
     print_success "Next.js project initialized"
 fi
-
-# Install additional dependencies
-print_status "Installing project dependencies..."
-npm install @hookform/resolvers@^3.9.0 \
-    @radix-ui/react-accordion@^1.2.0 \
-    @radix-ui/react-alert-dialog@^1.1.1 \
-    @radix-ui/react-aspect-ratio@^1.1.0 \
-    @radix-ui/react-avatar@^1.1.0 \
-    @radix-ui/react-checkbox@^1.1.1 \
-    @radix-ui/react-collapsible@^1.1.0 \
-    @radix-ui/react-context-menu@^2.2.1 \
-    @radix-ui/react-dialog@^1.1.1 \
-    @radix-ui/react-dropdown-menu@^2.1.1 \
-    @radix-ui/react-hover-card@^1.1.1 \
-    @radix-ui/react-label@^2.1.0 \
-    @radix-ui/react-menubar@^1.1.1 \
-    @radix-ui/react-navigation-menu@^1.2.0 \
-    @radix-ui/react-popover@^1.1.1 \
-    @radix-ui/react-progress@^1.1.0 \
-    @radix-ui/react-radio-group@^1.2.0 \
-    @radix-ui/react-scroll-area@^1.1.0 \
-    @radix-ui/react-select@^2.1.1 \
-    @radix-ui/react-separator@^1.1.0 \
-    @radix-ui/react-slider@^1.2.0 \
-    @radix-ui/react-slot@^1.1.0 \
-    @radix-ui/react-switch@^1.1.0 \
-    @radix-ui/react-tabs@^1.1.0 \
-    @radix-ui/react-toast@^1.2.1 \
-    @radix-ui/react-toggle@^1.1.0 \
-    @radix-ui/react-toggle-group@^1.1.0 \
-    @radix-ui/react-tooltip@^1.1.2 \
-    class-variance-authority@^0.7.0 \
-    clsx@^2.1.1 \
-    cmdk@^1.0.0 \
-    date-fns@^3.6.0 \
-    embla-carousel-react@^8.3.0 \
-    input-otp@^1.2.4 \
-    lucide-react@^0.446.0 \
-    next-themes@^0.3.0 \
-    nodemailer@^6.9.8 \
-    @types/nodemailer@^6.4.14 \
-    react-day-picker@^8.10.1 \
-    react-hook-form@^7.53.0 \
-    react-resizable-panels@^2.1.3 \
-    recharts@^2.12.7 \
-    sonner@^1.5.0 \
-    stripe@^14.21.0 \
-    tailwind-merge@^2.5.2 \
-    tailwindcss-animate@^1.0.7 \
-    vaul@^0.9.9 \
-    zod@^3.23.8
-
-print_success "Dependencies installed successfully"
 
 # Create environment file
 print_status "Creating environment configuration..."
