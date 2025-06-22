@@ -7,7 +7,7 @@ const dbConfig = {
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'revolution_web3',
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false, ca: '' } : false,
+  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
 };
 
 // Create connection pool for better performance
