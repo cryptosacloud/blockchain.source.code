@@ -8,6 +8,7 @@ import { Search, Filter, Cpu, Zap, ShoppingCart, Flame } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { products, featuredProductIds } from '@/lib/products';
+import { PaymentModal } from '@/components/PaymentModal';
 
 const categories = ['All', 'NFT', 'DeFi', 'Governance', 'Enterprise', 'Storage', 'Insurance', 'Identity', 'Real Estate', 'Crowdfunding', 'Blockchain', 'Tools', 'Solana', 'ICO', 'Social', 'AI', 'Trading', 'Exchange', 'Services'];
 
@@ -18,6 +19,8 @@ interface SourceCodeGalleryProps {
 export function SourceCodeGallery({ showFeaturedOnly = false }: SourceCodeGalleryProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   // Use featured products for home page, all products for source code page
   const displayProjects = showFeaturedOnly 
@@ -32,9 +35,13 @@ export function SourceCodeGallery({ showFeaturedOnly = false }: SourceCodeGaller
   });
 
   const handleBuyNow = (project: typeof products[0]) => {
-    // Redirect to contact page with pre-selected service
-    const serviceType = project.title.toLowerCase().replace(/\s+/g, '-');
-    window.location.href = `/contact?service=${serviceType}&price=${project.price.replace('$', '')}`;
+    setSelectedProduct(project);
+    setIsPaymentModalOpen(true);
+  };
+
+  const closePaymentModal = () => {
+    setIsPaymentModalOpen(false);
+    setSelectedProduct(null);
   };
 
   return (
@@ -166,6 +173,15 @@ export function SourceCodeGallery({ showFeaturedOnly = false }: SourceCodeGaller
           </div>
         )}
       </div>
+
+      {/* Payment Modal */}
+      {selectedProduct && (
+        <PaymentModal
+          isOpen={isPaymentModalOpen}
+          onClose={closePaymentModal}
+          product={selectedProduct}
+        />
+      )}
     </section>
   );
 }
