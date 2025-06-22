@@ -137,8 +137,8 @@ A comprehensive blockchain development platform featuring source code marketplac
 #### Stripe Configuration
 ```env
 # Stripe Configuration
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_live_51QKg0cKKaGPIKFDDT9WRxjw0MEC31MNB3g4Kz5eDYfaqwZfeHmPBq3oyNpogWuw5IUTpZeDABD5MBvOIOuvqBbw400C7iXjR2R"
-STRIPE_SECRET_KEY="sk_test_51•••••U5M"
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=""
+STRIPE_SECRET_KEY=""
 STRIPE_WEBHOOK_SECRET="whsec_your_stripe_webhook_secret"
 ```
 
@@ -151,8 +151,8 @@ STRIPE_WEBHOOK_SECRET="whsec_your_stripe_webhook_secret"
 #### Cryptomus Configuration
 ```env
 # Cryptomus Configuration
-CRYPTOMUS_API_KEY="M33bUJb5aBFHm16acSO3I2BY1UTVSD8QZITioQGKu8l0Q5XpZRiGeoEZMhf8q908MzhzzKoiU3SPRLNWmVGGH1lJpOMrzuq3gLrLYfqiAx3vfWorRoq4w89ooJZeCBFR"
-CRYPTOMUS_MERCHANT_ID="abeef092-f7ce-4d72-b20b-e9643637d0b4"
+CRYPTOMUS_API_KEY=""
+CRYPTOMUS_MERCHANT_ID=""
 CRYPTOMUS_WEBHOOK_SECRET="your_cryptomus_webhook_secret"
 ```
 
@@ -218,13 +218,13 @@ SMTP_TLS_REJECT_UNAUTHORIZED="true"
 ADMIN_EMAIL="admin@revolutionweb3.store"
 
 # Stripe Configuration
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_live_51QKg0cKKaGPIKFDDT9WRxjw0MEC31MNB3g4Kz5eDYfaqwZfeHmPBq3oyNpogWuw5IUTpZeDABD5MBvOIOuvqBbw400C7iXjR2R"
-STRIPE_SECRET_KEY="sk_test_51•••••U5M"
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=""
+STRIPE_SECRET_KEY=""
 STRIPE_WEBHOOK_SECRET="whsec_your_stripe_webhook_secret"
 
 # Cryptomus Configuration
-CRYPTOMUS_API_KEY="M33bUJb5aBFHm16acSO3I2BY1UTVSD8QZITioQGKu8l0Q5XpZRiGeoEZMhf8q908MzhzzKoiU3SPRLNWmVGGH1lJpOMrzuq3gLrLYfqiAx3vfWorRoq4w89ooJZeCBFR"
-CRYPTOMUS_MERCHANT_ID="abeef092-f7ce-4d72-b20b-e9643637d0b4"
+CRYPTOMUS_API_KEY=""
+CRYPTOMUS_MERCHANT_ID=""
 CRYPTOMUS_WEBHOOK_SECRET="your_cryptomus_webhook_secret"
 
 # Application Configuration
