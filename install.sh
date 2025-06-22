@@ -233,6 +233,19 @@ if [ -f "package.json" ]; then
         print_success ".next directory cleaned"
     fi
     
+    # Remove any existing build symlink or directory
+    if [ -L "build" ]; then
+        print_status "Removing existing build symlink..."
+        rm -f build
+        print_success "Build symlink removed"
+    fi
+    
+    if [ -d "build" ]; then
+        print_status "Removing existing build directory..."
+        rm -rf build
+        print_success "Build directory removed"
+    fi
+    
     # Fresh installation of dependencies
     print_status "Installing dependencies from package.json..."
     npm install
@@ -302,19 +315,6 @@ print_success "Logs directory created"
 print_status "Building the project..."
 npm run build
 print_success "Project built successfully"
-
-# Create symbolic link from .next to build directory for runtime compatibility
-print_status "Creating build directory symlink for runtime compatibility..."
-if [ -L "build" ]; then
-    print_status "Removing existing build symlink..."
-    rm -f build
-fi
-if [ -d "build" ]; then
-    print_status "Removing existing build directory..."
-    rm -rf build
-fi
-ln -sf .next build
-print_success "Build directory symlink created (.next -> build)"
 
 echo ""
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
