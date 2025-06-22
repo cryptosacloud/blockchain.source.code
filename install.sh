@@ -226,6 +226,13 @@ if [ -f "package.json" ]; then
         rm -f yarn.lock
     fi
     
+    # Remove .next directory to prevent webpack cache issues
+    if [ -d ".next" ]; then
+        print_status "Removing existing .next build cache directory..."
+        rm -rf .next
+        print_success ".next directory cleaned"
+    fi
+    
     # Fresh installation of dependencies
     print_status "Installing dependencies from package.json..."
     npm install
