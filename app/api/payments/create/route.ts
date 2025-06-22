@@ -204,7 +204,6 @@ export async function POST(request: NextRequest) {
     const order = await createOrder(body, paymentResult);
 
     return NextResponse.json({
-      success: true,
       orderId: order.id,
       ...paymentResult,
     });
