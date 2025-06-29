@@ -1,14 +1,11 @@
-'use client';
-
-import { useState } from 'react';
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, ShoppingCart, Star, Check, Code, Zap, Shield, Flame, Cpu } from 'lucide-react';
+import { ArrowLeft, Star, Check, Code, Zap, Shield, Flame, Cpu } from 'lucide-react';
 import Link from 'next/link';
 import { products } from '@/lib/products';
-import { PaymentModal } from '@/components/PaymentModal';
+import { ProductBuySection } from '@/components/ProductBuySection';
 
 interface ProductPageProps {
   params: {
@@ -24,20 +21,11 @@ export async function generateStaticParams() {
 }
 
 export default function ProductPage({ params }: ProductPageProps) {
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const product = products.find(p => p.id === parseInt(params.id));
 
   if (!product) {
     notFound();
   }
-
-  const handleBuyNow = () => {
-    setIsPaymentModalOpen(true);
-  };
-
-  const closePaymentModal = () => {
-    setIsPaymentModalOpen(false);
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-red-900 to-orange-900 text-white py-20 relative overflow-hidden">
@@ -193,17 +181,8 @@ export default function ProductPage({ params }: ProductPageProps) {
               </CardContent>
             </Card>
 
-            {/* Purchase Actions */}
-            <div className="space-y-4">
-              <Button
-                onClick={handleBuyNow}
-                size="lg"
-                className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 text-white py-4 text-lg font-semibold rounded-xl cyber-glow transition-all duration-300 transform hover:scale-105"
-              >
-                <ShoppingCart className="mr-2 h-5 w-5" />
-                Buy Now - {product.price}
-              </Button>
-            </div>
+            {/* Purchase Actions - Now using the client component */}
+            <ProductBuySection product={product} />
 
             {/* Guarantee */}
             <Card className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/30 rounded-2xl">
@@ -259,13 +238,6 @@ export default function ProductPage({ params }: ProductPageProps) {
           </Card>
         </div>
       </div>
-
-      {/* Payment Modal */}
-      <PaymentModal
-        isOpen={isPaymentModalOpen}
-        onClose={closePaymentModal}
-        product={product}
-      />
     </div>
   );
 }
