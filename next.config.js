@@ -9,10 +9,7 @@ const nextConfig = {
   optimizeFonts: false,
   output: 'export',
   trailingSlash: true,
-  distDir: 'out',
-  experimental: {
-    fontLoaders: []
-  }
+  distDir: 'out'
 };
 
 module.exports = nextConfig;

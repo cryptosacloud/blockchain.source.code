@@ -16,6 +16,13 @@ interface ProductPageProps {
   };
 }
 
+// Generate static params for all products
+export async function generateStaticParams() {
+  return products.map((product) => ({
+    id: product.id.toString(),
+  }));
+}
+
 export default function ProductPage({ params }: ProductPageProps) {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const product = products.find(p => p.id === parseInt(params.id));
