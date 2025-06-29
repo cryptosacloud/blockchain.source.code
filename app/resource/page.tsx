@@ -1,7 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Video, Code, FileText, Download, ExternalLink, Cpu, Zap, Shield, Flame } from 'lucide-react';
+import { BookOpen, Video, Code, FileText, ExternalLink, Cpu, Zap, Shield, Flame } from 'lucide-react';
+import Link from 'next/link';
 
 const resources = [
   {
@@ -12,17 +13,17 @@ const resources = [
     category: 'Smart Contracts',
     image: 'https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&w=400',
     icon: FileText,
-    downloadable: true
+    href: '/resource/solidity-fundamentals'
   },
   {
     id: 2,
     title: 'Web3.js Tutorial Series',
     description: 'Learn how to interact with Ethereum blockchain using Web3.js library.',
-    type: 'Video Course',
+    type: 'Tutorial Series',
     category: 'Frontend',
     image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=400',
     icon: Video,
-    downloadable: false
+    href: '/resource/web3js-tutorial'
   },
   {
     id: 3,
@@ -32,7 +33,7 @@ const resources = [
     category: 'DeFi',
     image: 'https://images.pexels.com/photos/7567522/pexels-photo-7567522.jpeg?auto=compress&cs=tinysrgb&w=400',
     icon: Code,
-    downloadable: true
+    href: '/resource/defi-templates'
   },
   {
     id: 4,
@@ -42,17 +43,17 @@ const resources = [
     category: 'Security',
     image: 'https://images.pexels.com/photos/5380664/pexels-photo-5380664.jpeg?auto=compress&cs=tinysrgb&w=400',
     icon: BookOpen,
-    downloadable: true
+    href: '/resource/security-guide'
   },
   {
     id: 5,
     title: 'NFT Development Masterclass',
     description: 'Complete course on building NFT marketplaces and minting platforms.',
-    type: 'Video Course',
+    type: 'Masterclass',
     category: 'NFT',
     image: 'https://images.pexels.com/photos/7567443/pexels-photo-7567443.jpeg?auto=compress&cs=tinysrgb&w=400',
     icon: Video,
-    downloadable: false
+    href: '/resource/nft-development'
   },
   {
     id: 6,
@@ -62,7 +63,7 @@ const resources = [
     category: 'Architecture',
     image: 'https://images.pexels.com/photos/730547/pexels-photo-730547.jpeg?auto=compress&cs=tinysrgb&w=400',
     icon: FileText,
-    downloadable: true
+    href: '/resource/blockchain-architecture'
   }
 ];
 
@@ -140,17 +141,12 @@ export default function ResourcePage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex gap-2">
-                      <Button className="flex-1 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white rounded-xl">
+                    <Link href={resource.href}>
+                      <Button className="w-full bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white rounded-xl">
                         <ExternalLink className="mr-2 h-4 w-4" />
                         View Resource
                       </Button>
-                      {resource.downloadable && (
-                        <Button variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:border-red-400 hover:text-red-400 rounded-xl">
-                          <Download className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
+                    </Link>
                   </CardContent>
                 </Card>
               );
