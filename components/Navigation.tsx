@@ -9,6 +9,7 @@ const navItems = [
   { name: 'Home', href: '/' },
   { name: 'Resource', href: '/resource' },
   { name: 'Source Code', href: '/source-code' },
+  { name: 'Installation', href: '/installation' },
   { name: 'Contact', href: '/contact' },
 ];
 
