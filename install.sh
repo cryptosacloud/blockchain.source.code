@@ -94,6 +94,83 @@ validate_email() {
     fi
 }
 
+# Function to clean all caches thoroughly
+clean_all_caches() {
+    print_status "Performing comprehensive cache cleanup..."
+    
+    # Stop any running Next.js processes
+    print_status "Stopping any running Next.js processes..."
+    pkill -f "next" 2>/dev/null || true
+    pkill -f "node.*next" 2>/dev/null || true
+    sleep 2
+    
+    # Clean npm cache
+    print_status "Clearing npm cache..."
+    npm cache clean --force 2>/dev/null || true
+    npm cache verify 2>/dev/null || true
+    
+    # Remove all build and cache directories
+    print_status "Removing build and cache directories..."
+    
+    # Remove .next directory (Next.js build cache)
+    if [ -d ".next" ]; then
+        print_status "Removing .next directory..."
+        rm -rf .next
+        print_success ".next directory removed"
+    fi
+    
+    # Remove node_modules
+    if [ -d "node_modules" ]; then
+        print_status "Removing node_modules directory..."
+        rm -rf node_modules
+        print_success "node_modules directory removed"
+    fi
+    
+    # Remove lock files
+    for lockfile in package-lock.json yarn.lock pnpm-lock.yaml; do
+        if [ -f "$lockfile" ]; then
+            print_status "Removing $lockfile..."
+            rm -f "$lockfile"
+            print_success "$lockfile removed"
+        fi
+    done
+    
+    # Remove build directory/symlink
+    if [ -L "build" ]; then
+        print_status "Removing build symlink..."
+        rm -f build
+        print_success "Build symlink removed"
+    elif [ -d "build" ]; then
+        print_status "Removing build directory..."
+        rm -rf build
+        print_success "Build directory removed"
+    fi
+    
+    # Remove other potential cache directories
+    for cache_dir in ".turbo" "dist" "out" ".swc" ".parcel-cache" ".cache"; do
+        if [ -d "$cache_dir" ]; then
+            print_status "Removing $cache_dir directory..."
+            rm -rf "$cache_dir"
+            print_success "$cache_dir directory removed"
+        fi
+    done
+    
+    # Clean temporary files
+    print_status "Cleaning temporary files..."
+    find . -name "*.tmp" -type f -delete 2>/dev/null || true
+    find . -name "*.temp" -type f -delete 2>/dev/null || true
+    find . -name ".DS_Store" -type f -delete 2>/dev/null || true
+    
+    # Clear system temp if accessible
+    if [ -w "/tmp" ]; then
+        print_status "Clearing system temporary files..."
+        rm -rf /tmp/next-* 2>/dev/null || true
+        rm -rf /tmp/webpack-* 2>/dev/null || true
+    fi
+    
+    print_success "Comprehensive cache cleanup completed"
+}
+
 # Check system requirements
 print_step "Checking system requirements..."
 
@@ -204,54 +281,21 @@ cd "$PROJECT_DIR"
 
 # Check if this is already a Next.js project
 if [ -f "package.json" ]; then
-    print_status "Existing Next.js project detected, cleaning and reinstalling dependencies..."
+    print_status "Existing Next.js project detected, performing comprehensive cleanup..."
     
-    # Clean npm cache and remove existing installations
-    print_status "Clearing npm cache..."
-    npm cache clean --force
-    
-    # Remove node_modules and package-lock.json for clean installation
-    if [ -d "node_modules" ]; then
-        print_status "Removing existing node_modules directory..."
-        rm -rf node_modules
-    fi
-    
-    if [ -f "package-lock.json" ]; then
-        print_status "Removing existing package-lock.json..."
-        rm -f package-lock.json
-    fi
-    
-    if [ -f "yarn.lock" ]; then
-        print_status "Removing existing yarn.lock..."
-        rm -f yarn.lock
-    fi
-    
-    # Remove .next directory to prevent webpack cache issues
-    if [ -d ".next" ]; then
-        print_status "Removing existing .next build cache directory..."
-        rm -rf .next
-        print_success ".next directory cleaned"
-    fi
-    
-    # Remove any existing build symlink or directory
-    if [ -L "build" ]; then
-        print_status "Removing existing build symlink..."
-        rm -f build
-        print_success "Build symlink removed"
-    fi
-    
-    if [ -d "build" ]; then
-        print_status "Removing existing build directory..."
-        rm -rf build
-        print_success "Build directory removed"
-    fi
+    # Perform comprehensive cache cleanup
+    clean_all_caches
     
     # Fresh installation of dependencies
     print_status "Installing dependencies from package.json..."
-    npm install
+    npm install --no-cache --prefer-offline=false
     print_success "Dependencies installed from package.json"
 else
     print_status "Initializing new Next.js project..."
+    
+    # Clean any existing caches before creating new project
+    clean_all_caches
+    
     npx create-next-app@13.5.1 . --typescript --tailwind --eslint --app --src-dir=false --import-alias="@/*" --yes
     print_success "Next.js project initialized"
 fi
@@ -311,8 +355,8 @@ print_success "Environment file created"
 mkdir -p logs
 print_success "Logs directory created"
 
-# Build the project
-print_status "Building the project..."
+# Build the project with clean cache
+print_status "Building the project with clean cache..."
 npm run build
 print_success "Project built successfully"
 
@@ -339,6 +383,11 @@ echo -e "${BLUE}npm run build${NC}"
 echo ""
 echo -e "${GREEN}# Start production server${NC}"
 echo -e "${BLUE}npm start${NC}"
+
+echo ""
+echo -e "${CYAN}🔧 Troubleshooting:${NC}"
+echo -e "${YELLOW}# If you encounter webpack cache errors, run:${NC}"
+echo -e "${BLUE}rm -rf .next node_modules package-lock.json && npm install${NC}"
 
 echo ""
 echo -e "${CYAN}📚 Important Files:${NC}"
