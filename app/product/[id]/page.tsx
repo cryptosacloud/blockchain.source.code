@@ -1,12 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, ShoppingCart, Star, Check, Code, Zap, Shield, Download, ExternalLink, Flame, Cpu } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Star, Check, Code, Zap, Shield, Flame, Cpu } from 'lucide-react';
 import Link from 'next/link';
 import { products } from '@/lib/products';
+import { PaymentModal } from '@/components/PaymentModal';
 
 interface ProductPageProps {
   params: {
@@ -15,6 +17,7 @@ interface ProductPageProps {
 }
 
 export default function ProductPage({ params }: ProductPageProps) {
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const product = products.find(p => p.id === parseInt(params.id));
 
   if (!product) {
@@ -22,8 +25,11 @@ export default function ProductPage({ params }: ProductPageProps) {
   }
 
   const handleBuyNow = () => {
-    const serviceType = product.title.toLowerCase().replace(/\s+/g, '-');
-    window.location.href = `/contact?service=${serviceType}&price=${product.price.replace('$', '')}`;
+    setIsPaymentModalOpen(true);
+  };
+
+  const closePaymentModal = () => {
+    setIsPaymentModalOpen(false);
   };
 
   return (
@@ -190,23 +196,6 @@ export default function ProductPage({ params }: ProductPageProps) {
                 <ShoppingCart className="mr-2 h-5 w-5" />
                 Buy Now - {product.price}
               </Button>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <Button
-                  variant="outline"
-                  className="border-gray-600 text-gray-300 hover:border-orange-400 hover:text-orange-400 rounded-xl"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  Download Demo
-                </Button>
-                <Button
-                  variant="outline"
-                  className="border-gray-600 text-gray-300 hover:border-red-400 hover:text-red-400 rounded-xl"
-                >
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  Live Preview
-                </Button>
-              </div>
             </div>
 
             {/* Guarantee */}
@@ -263,6 +252,13 @@ export default function ProductPage({ params }: ProductPageProps) {
           </Card>
         </div>
       </div>
+
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={closePaymentModal}
+        product={product}
+      />
     </div>
   );
 }

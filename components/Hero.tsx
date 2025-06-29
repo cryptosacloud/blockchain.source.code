@@ -1,5 +1,8 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Code, Zap, Shield, Cpu, Globe, Lock, Sparkles, Flame } from 'lucide-react';
+import Link from 'next/link';
 
 export function Hero() {
   return (
@@ -32,14 +35,12 @@ export function Hero() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
-            <Button size="lg" className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-10 py-4 text-lg font-semibold rounded-xl cyber-glow transition-all duration-300 transform hover:scale-105">
-              <Code className="mr-2 h-5 w-5" />
-              Browse Templates
-            </Button>
-            <Button size="lg" variant="outline" className="border-2 border-orange-500 text-orange-400 hover:bg-orange-500 hover:text-white px-10 py-4 text-lg font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 animated-border">
-              <Globe className="mr-2 h-5 w-5" />
-              View Live Demos
-            </Button>
+            <Link href="/source-code">
+              <Button size="lg" className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-10 py-4 text-lg font-semibold rounded-xl cyber-glow transition-all duration-300 transform hover:scale-105">
+                <Code className="mr-2 h-5 w-5" />
+                Browse Templates
+              </Button>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
